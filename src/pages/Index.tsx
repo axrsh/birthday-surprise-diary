@@ -28,7 +28,7 @@ const Index = () => {
       <audio 
         ref={audioRef} 
         loop 
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        src="/birthday-song.mp3"
       />
       
       {/* Music indicator */}

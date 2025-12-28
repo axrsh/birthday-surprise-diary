@@ -1,16 +1,43 @@
-import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Mail, Volume2 } from 'lucide-react';
 import Balloon from '@/components/Balloon';
 import FloatingHeart from '@/components/FloatingHeart';
 import Bunting from '@/components/Bunting';
 import Sparkle from '@/components/Sparkle';
 import DiaryModal from '@/components/DiaryModal';
+import chhaviAvatar from '@/assets/chhavi-avatar.png';
 
 const Index = () => {
   const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [musicStarted, setMusicStarted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const handlePageClick = () => {
+    if (!musicStarted && audioRef.current) {
+      audioRef.current.play();
+      setMusicStarted(true);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background grid-bg relative overflow-hidden">
+    <div 
+      className="min-h-screen bg-background grid-bg relative overflow-hidden cursor-pointer"
+      onClick={handlePageClick}
+    >
+      {/* Background Music */}
+      <audio 
+        ref={audioRef} 
+        loop 
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      />
+      
+      {/* Music indicator */}
+      {!musicStarted && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-primary/90 text-primary-foreground px-4 py-2 rounded-full font-body text-sm flex items-center gap-2 animate-bounce-soft shadow-lg">
+          <Volume2 size={16} />
+          Click anywhere to play music
+        </div>
+      )}
       {/* Floating Hearts */}
       <FloatingHeart />
       
@@ -60,60 +87,87 @@ const Index = () => {
       />
       
       {/* Main content */}
-      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-4 py-20">
-        {/* Party hat decoration */}
-        <div className="absolute top-24 left-1/4 -translate-x-1/2">
-          <svg width="50" height="60" viewBox="0 0 50 60">
-            <polygon points="25,0 0,55 50,55" className="fill-primary" />
-            <circle cx="25" cy="0" r="6" className="fill-accent" />
-            <ellipse cx="10" cy="45" rx="4" ry="3" className="fill-secondary" />
-            <ellipse cx="40" cy="35" rx="3" ry="2" className="fill-secondary" />
-            <ellipse cx="25" cy="25" rx="3" ry="2" className="fill-secondary" />
-          </svg>
-        </div>
-        
-        {/* Happy Birthday Text */}
-        <div className="text-center mb-8">
-          <h1 className="font-display text-6xl md:text-8xl text-primary drop-shadow-lg">
-            Happy
-          </h1>
-          <h2 className="font-display text-5xl md:text-7xl text-primary drop-shadow-lg -mt-2">
-            Birthday
-          </h2>
-        </div>
-        
-        {/* Name badge */}
-        <div className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-body font-semibold text-lg shadow-lg flex items-center gap-3 mb-8">
-          <span className="text-xl">★</span>
-          Dear Mehwish
-          <span className="text-xl">★</span>
-        </div>
-        
-        {/* Click Here Button */}
-        <button
-          onClick={() => setIsDiaryOpen(true)}
-          className="group bg-secondary hover:bg-primary text-secondary-foreground hover:text-primary-foreground px-8 py-4 rounded-full font-body font-semibold text-lg shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-3 animate-bounce-soft"
-        >
-          Click Here Mehwish
-          <Mail className="w-5 h-5 group-hover:animate-pulse" />
-        </button>
-        
-        {/* Smiley decoration */}
-        <div className="mt-12 w-16 h-16 rounded-full border-4 border-foreground/30 flex items-center justify-center">
-          <div className="relative w-full h-full flex items-center justify-center">
-            {/* Eyes */}
-            <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-foreground/50" />
-            <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-foreground/50" />
-            {/* Smile */}
-            <svg className="absolute bottom-3" width="24" height="12" viewBox="0 0 24 12">
-              <path 
-                d="M 2 2 Q 12 14, 22 2" 
-                stroke="hsl(var(--foreground))" 
-                strokeWidth="2" 
-                fill="none"
-                className="opacity-50"
-              />
+      <div className="relative z-20 flex flex-col md:flex-row items-center justify-center min-h-screen px-4 py-20 gap-8 md:gap-16">
+        {/* Left side - Happy Birthday */}
+        <div className="flex flex-col items-center">
+          {/* Party hat decoration */}
+          <div className="relative mb-4">
+            <svg width="50" height="60" viewBox="0 0 50 60">
+              <polygon points="25,0 0,55 50,55" className="fill-primary" />
+              <circle cx="25" cy="0" r="6" className="fill-accent" />
+              <ellipse cx="10" cy="45" rx="4" ry="3" className="fill-secondary" />
+              <ellipse cx="40" cy="35" rx="3" ry="2" className="fill-secondary" />
+              <ellipse cx="25" cy="25" rx="3" ry="2" className="fill-secondary" />
             </svg>
+          </div>
+          
+          {/* Happy Birthday Text */}
+          <div className="text-center mb-6">
+            <h1 className="font-display text-5xl md:text-7xl text-primary drop-shadow-lg">
+              Happy
+            </h1>
+            <h2 className="font-display text-4xl md:text-6xl text-primary drop-shadow-lg -mt-2">
+              Birthday
+            </h2>
+          </div>
+          
+          {/* Click Here Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsDiaryOpen(true);
+            }}
+            className="group bg-secondary hover:bg-primary text-secondary-foreground hover:text-primary-foreground px-8 py-4 rounded-full font-body font-semibold text-lg shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-3 animate-bounce-soft"
+          >
+            Click Here Chhavi
+            <Mail className="w-5 h-5 group-hover:animate-pulse" />
+          </button>
+          
+          {/* Smiley decoration */}
+          <div className="mt-8 w-14 h-14 rounded-full border-4 border-foreground/30 flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <div className="absolute top-3 left-3 w-2 h-2 rounded-full bg-foreground/50" />
+              <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-foreground/50" />
+              <svg className="absolute bottom-2" width="20" height="10" viewBox="0 0 24 12">
+                <path 
+                  d="M 2 2 Q 12 14, 22 2" 
+                  stroke="hsl(var(--foreground))" 
+                  strokeWidth="2" 
+                  fill="none"
+                  className="opacity-50"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        {/* Right side - Photo */}
+        <div className="flex flex-col items-center">
+          {/* Circular photo frame */}
+          <div className="relative">
+            {/* Outer ring */}
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-foreground/20 p-2 bg-gradient-to-br from-primary/20 to-accent/20 shadow-2xl">
+              <img 
+                src={chhaviAvatar} 
+                alt="Chhavi" 
+                className="w-full h-full rounded-full object-cover"
+              />
+            </div>
+            
+            {/* Decorative balloons around photo */}
+            <Balloon 
+              className="absolute -top-4 -right-4 animate-balloon-sway scale-75" 
+              color="pink"
+            />
+            <Balloon 
+              className="absolute -top-2 -left-6 animate-balloon-sway-alt scale-75" 
+              color="coral"
+            />
+          </div>
+          
+          {/* Name badge below photo */}
+          <div className="mt-4 bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground px-8 py-2 rounded-full font-display text-xl shadow-lg">
+            Dear Chhavi
           </div>
         </div>
       </div>
